@@ -15,7 +15,7 @@ metagenomicNASH <- c("CL.166", "CL.169", "CL.139", "CL.173", "CL.144", "CL.177",
 otu.metagenomicNASH <- otu.tab[,which(colnames(otu.tab)%in%metagenomicNASH)]
 metagenomicHealthy <- c("HLD.100", "HLD.102", "HLD.111", "HLD.80", "HLD.85", "HLD.28", "HLD.47", "HLD.72", "HLD.112", "HLD.23")
 otu.metagenomicHealthy <- otu.tab[,which(colnames(otu.tab)%in%metagenomicHealthy)]
-otu.tab.metagenomic <- data.frame(nrow=(nrow(otu.tab)),ncol=(length(metagenomicNASH)+length(metagenomicHealthy)))
+otu.tab.metagenomic <- data.frame(nrow=(nrow(aotu.tab)),ncol=(length(metagenomicNASH)+length(metagenomicHealthy)))
 otu.tab.metagenomic <- cbind(otu.metagenomicNASH, otu.metagenomicHealthy)
 
 ### CODE FOR GETTING OTUS THAT ARE AT LEAST 1% ABUNDANT IN AT LEAST ONE SAMPLE
@@ -31,6 +31,18 @@ for (i in 1:length(rownames(otu.tab.metagenomic))) {
   }
 }
 abundant.otus <- rownames(otu.tab.metagenomic)[which.otus.abundant]
+
+### CODE FOR OUTPUTTING FASTA FILE WITH ABUNDANT OTU SEQUENCES ONLY
+
+fasta.in <- read.table("data/OTU_seed_seqs.fa", sep="\t",stringsAsFactors=FALSE)
+fasta.in <- fasta.in[,1]
+ids.string <- fasta.in[c(TRUE,FALSE)]
+seqs <- fasta.in[c(FALSE,TRUE)]
+ids <- gsub("^>lcl\\|[0-9]*\\|num\\|[0-9]*\\|OTU\\|","",ids.string)
+fasta.out <- c(1:(length(abundant.otus)*2))
+fasta.out[c(TRUE,FALSE)] <- ids.string[which(ids%in%abundant.otus)]
+fasta.out[c(FALSE,TRUE)] <- seqs[which(ids%in%abundant.otus)]
+write.table(fasta.out,file="data/OTU_seed_seqs_less_common_removed.fa",col.names=FALSE,row.names=FALSE,quote=FALSE)
 
 ### CODE FOR GETTING OTUS THAT ARE OVERALL AT LEAST 1% OR 0.1% ABUNDANT
 
