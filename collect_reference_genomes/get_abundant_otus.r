@@ -1,4 +1,38 @@
-otu.tab <- read.table("data/nash_data/td_OTU_tag_mapped_lineage.txt", header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+otu.tab.taxonomy <- read.table("data/nash_data/otus_by_ALL.txt", header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE, stringsAsFactors=FALSE)
+
+### PROCESS TABLE INTO NUMERIC AND EXTRACT TAXONOMY
+
+otu.tab.taxonomy <- t(otu.tab.taxonomy)
+taxonomy <- otu.tab.taxonomy[,ncol(otu.tab.taxonomy)]
+otu.tab <- otu.tab.taxonomy[,c(1:(ncol(otu.tab.taxonomy)-1))]
+otu.tab <- t(apply(otu.tab,1,as.numeric))
+rownames(otu.tab) <- rownames(otu.tab.taxonomy)
+colnames(otu.tab) <- colnames(otu.tab.taxonomy)[c(1:(ncol(otu.tab.taxonomy)-1))]
+
+### CODE FOR FILTERING AND SELECTING SAMPLES
+
+metagenomicNASH <- c("CL.166", "CL.169", "CL.139", "CL.173", "CL.144", "CL.177", "CL.160", "CL.165", "CL.119", "CL.141", "CL.172")
+otu.metagenomicNASH <- otu.tab[,which(colnames(otu.tab)%in%metagenomicNASH)]
+metagenomicHealthy <- c("HLD.100", "HLD.102", "HLD.111", "HLD.80", "HLD.85", "HLD.28", "HLD.47", "HLD.72", "HLD.112", "HLD.23")
+otu.metagenomicHealthy <- otu.tab[,which(colnames(otu.tab)%in%metagenomicHealthy)]
+otu.tab.metagenomic <- data.frame(nrow=(nrow(otu.tab)),ncol=(length(metagenomicNASH)+length(metagenomicHealthy)))
+otu.tab.metagenomic <- cbind(otu.metagenomicNASH, otu.metagenomicHealthy)
+
+### CODE FOR GETTING OTUS THAT ARE AT LEAST 1% ABUNDANT IN AT LEAST ONE SAMPLE
+
+otu.sums <- apply(otu.tab.metagenomic,2,sum)
+one.percents <- otu.sums * 0.01
+
+#determine which OTUs are > 1% abundance in any sample
+which.otus.abundant <- rep(FALSE,length(rownames(otu.tab.metagenomic)))
+for (i in 1:length(rownames(otu.tab.metagenomic))) {
+  if (any(otu.tab.metagenomic[i,]>one.percents)) {
+    which.otus.abundant[i] = TRUE
+  }
+}
+abundant.otus <- rownames(otu.tab.metagenomic)[which.otus.abundant]
+
+### CODE FOR GETTING OTUS THAT ARE OVERALL AT LEAST 1% OR 0.1% ABUNDANT
 
 otu.sum <- apply(otu.tab,1,sum)
 total.count <- sum(otu.sum)
