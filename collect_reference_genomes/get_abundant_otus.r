@@ -11,11 +11,11 @@ colnames(otu.tab) <- colnames(otu.tab.taxonomy)[c(1:(ncol(otu.tab.taxonomy)-1))]
 
 ### CODE FOR FILTERING AND SELECTING SAMPLES
 
-metagenomicNASH <- c("CL.166", "CL.169", "CL.139", "CL.173", "CL.144", "CL.177", "CL.160", "CL.165", "CL.119", "CL.141", "CL.172")
+metagenomicNASH <- c("CL.166", "CL.169", "CL.139", "CL.173", "CL.177", "CL.160", "CL.165", "CL.119")
 otu.metagenomicNASH <- otu.tab[,which(colnames(otu.tab)%in%metagenomicNASH)]
-metagenomicHealthy <- c("HLD.100", "HLD.102", "HLD.111", "HLD.80", "HLD.85", "HLD.28", "HLD.47", "HLD.72", "HLD.112", "HLD.23")
+metagenomicHealthy <- c("HLD.100", "HLD.102", "HLD.111", "HLD.80", "HLD.85", "HLD.28", "HLD.112", "HLD.23")
 otu.metagenomicHealthy <- otu.tab[,which(colnames(otu.tab)%in%metagenomicHealthy)]
-otu.tab.metagenomic <- data.frame(nrow=(nrow(aotu.tab)),ncol=(length(metagenomicNASH)+length(metagenomicHealthy)))
+otu.tab.metagenomic <- data.frame(nrow=(nrow(otu.tab)),ncol=(length(metagenomicNASH)+length(metagenomicHealthy)))
 otu.tab.metagenomic <- cbind(otu.metagenomicNASH, otu.metagenomicHealthy)
 
 ### CODE FOR GETTING OTUS THAT ARE AT LEAST 1% ABUNDANT IN AT LEAST ONE SAMPLE
