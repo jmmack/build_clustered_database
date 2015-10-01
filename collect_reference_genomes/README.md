@@ -41,7 +41,7 @@ I put my BLAST output (Downloaded in CSV format) in data/complete-genomes-Alignm
 
 ## Retrieve the genome for the matches
 
-This is done in the script extract_taxon_not_in_hmp.py. It requires you to make a folder named genome inside the folder named data, and uses the blast outputs generated in the previous section.
+This is done in the script extract_genomes_not_in_hmp.py. It requires you to make a folder named genome inside the folder named data, and uses the blast outputs generated in the previous section.
 
 I only wanted genomes that were the best match for each OTU. If there was a match > 99% percent identity, then I wanted a second genome that had a percent identity just over 97%. The script extracts the gi numbers for such matches, and then crawls the NCBI nuccore website to find the taxon ID. The taxon ID is found in ftp://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/assembly_summary_genbank.txt and the corresponding FTP link is used to download the genome.
 
