@@ -1,5 +1,6 @@
 #############################################################################
-# These functions allow one to retrieve NCBI taxon ID using the GI number.
+# These functions allow one to retrieve NCBI taxon ID using the GI number,
+#  and then download the corresponding full bacterial genome.
 # The input is a csv BLAST output file, downloaded from the NCBI BLAST webtool.
 # Ruth Grace Wong
 # ruthgracewong@gmail.com
@@ -9,6 +10,7 @@
 import urllib2
 import re
 from bs4 import BeautifulSoup
+from ftplib import FTP
 
 # Extracts taxon ID using GI number, using information found on NCBI website.
 def getTaxon(giNumber):
@@ -66,6 +68,33 @@ def getAllTaxon(gi,filename):
             taxon.add(newTaxon)
             taxonOutput.write(newTaxon+"\n")
     taxonOutput.close()
+    return taxon
+
+# Downloads all genomes associated with the taxon into the specified folder
+def getAllGenomes(taxon, foldername):
+    # This file was downloaded from ftp://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/assembly_summary_genbank.txt
+    genbank = open('data/assembly_summary_genbank.txt','r')
+    ftp = FTP('ftp.ncbi.nlm.nih.gov')     # connect to host, default port
+    ftp.login()
+    for line in genbank:
+        if line[0]!='#':
+            items = line.split("\t")
+            if len(items) == 20:
+                currentTaxon  = items[5]
+                if currentTaxon in taxon:
+                    # Get the FTP link to the genome for the taxa
+                    genomeFolder = items[19].strip()
+                    if genomeFolder!="":
+                        # removing ftp://ftp.ncbi.nlm.nih.gov from beginning of genome folder path
+                        genomeFolder = genomeFolder[26:]
+                        filename = genomeFolder.split("/")[-1].strip()
+                        if filename!="":
+                            print("attempting to retrieve " + filename + "_genomic.fna.gz" + " from " + genomeFolder + " for taxon " + currentTaxon)
+                            ftp.cwd(genomeFolder)
+                            localGenome = open(foldername + filename + "_genomic.fna.gz", 'wb')
+                            ftp.retrbinary('RETR %s' % filename + "_genomic.fna.gz", localGenome.write)
+                            localGenome.close()
+    genbank.close()
 
 ### Calling the functions
 gi = set()
@@ -75,5 +104,7 @@ getGI(gi,'./output/wgs-Alignment-HitTable.csv')
 print("Extracted " + str(len(gi)) + " gi numbers from wgs output")
 getGI(gi,'./output/complete-genomes-Alignment-HitTable.csv')
 print("Extracted " + str(len(gi)) + " gi numbers from wgs and complete genome output")
-getAllTaxon(gi,'./output/taxon_not_in_hmp.txt')
+taxon = getAllTaxon(gi,'./data/taxon_not_in_hmp.txt')
+print("Output all taxon")
+getAllGenomes(taxon,'data/genomes/')
 print("Complete")
