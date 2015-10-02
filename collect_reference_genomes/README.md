@@ -23,7 +23,12 @@ The different sections do different things, so cut and paste what you need.
 
 The gut HMP reference genomes were downloaded from http://hmpdacc.org/HMRGD/healthy/
 
-To run local BLAST on the
+I turned the .fa file into a local BLAST database
+```
+makeblastdb -in all_seqs.fa -dbtype 'nucl' -out all_seqs.fa
+```
+
+Run local BLAST with the OTU seed sequences as a query and the HMP reference as a database:
 
 ```bash
 nohup blastn -db hmp_genomes/all_seqs.fa -query data/OTU_seed_seqs_less_common_removed.fa -out output/blast.out -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -evalue 1e-3 -num_alignments 10 -num_threads 4 > blast_nohup.out 2>&1&
