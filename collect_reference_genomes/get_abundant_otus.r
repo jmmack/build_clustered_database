@@ -18,10 +18,12 @@ otu.metagenomicHealthy <- otu.tab[,which(colnames(otu.tab)%in%metagenomicHealthy
 otu.tab.metagenomic <- data.frame(nrow=(nrow(otu.tab)),ncol=(length(metagenomicNASH)+length(metagenomicHealthy)))
 otu.tab.metagenomic <- cbind(otu.metagenomicNASH, otu.metagenomicHealthy)
 
-### CODE FOR GETTING OTUS THAT ARE AT LEAST 1% ABUNDANT IN AT LEAST ONE SAMPLE
+### CODE FOR GETTING OTUS THAT ARE AT LEAST 0.2% ABUNDANT IN AT LEAST ONE SAMPLE
+
+abundance.cutoff <- 0.002
 
 otu.sums <- apply(otu.tab.metagenomic,2,sum)
-one.percents <- otu.sums * 0.01
+one.percents <- otu.sums * abundance.cutoff
 
 #determine which OTUs are > 1% abundance in any sample
 which.otus.abundant <- rep(FALSE,length(rownames(otu.tab.metagenomic)))

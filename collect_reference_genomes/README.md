@@ -2,9 +2,9 @@
 
 This is Ruth's case-specific workflow for finding genomes to create a functional mapping library for a metagenomic study. A list of relevant genomes was created by amalgamating the HMP gut reference genomes with relevant genomes from the NCBI complete and draft bacterial genomes.
 
-## Find out which OTUs are >= 1% abundance
+## Find out which OTUs are >= 0.2% abundance
 
-In this experiment, the sequencing depth will only have on average 1x coverage of bacteria that are 1% abundant in a sample. The code for extracting the relevant OTU sequences is in get_abundant_otus.r
+In this experiment, the sequencing depth will have the power to detect a 2 fold change up or down in bacteria that are 0.2% abundant in a sample. The code for extracting the relevant OTU sequences is in get_abundant_otus.r
 
 The OTU table is read in this line
 
@@ -17,7 +17,7 @@ and the OTU sequences are read in this line
 fasta.in <- read.table("data/OTU_seed_seqs.fa", sep="\t",stringsAsFactors=FALSE)
 ```
 
-The different sections do different things, so cut and paste what you need.
+The different sections of code in get_abundant_otus.r do different things, so cut and paste what you need.
 
 ## BLAST OTU seed sequences with Human Microbiome Project data set
 
@@ -35,6 +35,8 @@ nohup blastn -db hmp_genomes/all_seqs.fa -query data/OTU_seed_seqs_less_common_r
 ```
 
 output list of sequences that don’t have a > 97% identity match using get_otus_not_in_hmp.r
+
+output HMP reference genomes that do have a >97% identity match using get_hmp_in_otus.r
 
 ## Find matches in the NCBI complete and draft bacterial genomes for the OTUs that don’t match to the HMP data set
 
