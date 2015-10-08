@@ -21,4 +21,13 @@ def outputCodingSequences(featureTableFilename, fnaFilename, outputFilename):
     output = open(outputFilename,'w')
     for line in featureTable:
         if line[:3] == "CDS":
-             
+            items = line.split("\t")
+            seqid = items[6].strip()
+            protid = items[10].strip()
+            start = items[7].strip()
+            end = items[8].strip()
+            sequence = sequences[seqid][(start-1):end].strip()
+            output.write(">genomic_accession|"+seqid+"|product_accession|"+protid+"\n")
+            output.write(sequence+"\n")
+    featureTable.close()
+    output.close()

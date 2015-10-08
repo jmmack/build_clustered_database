@@ -55,7 +55,7 @@ I only wanted genomes that were the best match for each OTU. If there was a matc
 The script can be run on the command line:
 
 ```bash
-nohup python extract_taxon_not_in_hmp.py > get_taxon_nohup.out 2>&1&
+nohup python extract_genomes.py > extract_genomes_nohup.out 2>&1&
 ```
 
 The download genomes are compressed. To uncompress, navigate to the folder in terminal and run:
@@ -63,7 +63,7 @@ The download genomes are compressed. To uncompress, navigate to the folder in te
 gunzip *.gz
 ```
 
-The end result is that all the genomes I need for my functional mapping library are in data/genomes/. For each genome, I've downloaded a feature table and a .fna file, so that the coding sequences can be extracted in the next step
+The end result is that all the genomes I need for my functional mapping library are in data/genomes/. For each genome, I've downloaded a feature table and a .fna file, so that the coding sequences can be extracted in the next step. Some of the sequences do not have a feature table, and in this case I've downloaded the .gff instead.
 
 ## Extract coding sequences from genomes
 

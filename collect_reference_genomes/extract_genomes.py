@@ -236,6 +236,8 @@ def getAllGenomesForTaxon(taxon, foldername):
                 ftp.retrbinary('RETR %s' % featureFilename, localGenome.write)
                 localGenome.close()
             except ftplib.error_perm:
+                localGenome.close()
+                os.remove(foldername + filenameBase + "_feature_table.txt.gz")
                 gffFilename = selectedStrains[strain] + "/" + filenameBase + "_genomic.gff.gz"
                 localGenome = open(foldername + filenameBase + "_genomic.gff.gz", 'wb')
                 ftp.retrbinary('RETR %s' % gffFilename, localGenome.write)
