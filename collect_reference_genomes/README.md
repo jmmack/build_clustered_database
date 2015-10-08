@@ -34,17 +34,17 @@ Run local BLAST with the OTU seed sequences as a query and the HMP reference as 
 nohup blastn -db hmp_genomes/all_seqs.fa -query data/OTU_seed_seqs_less_common_removed.fa -out output/blast.out -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -evalue 1e-3 -num_alignments 10 -num_threads 4 > blast_nohup.out 2>&1&
 ```
 
-output list of sequences that don’t have a > 97% identity match using get_otus_not_in_hmp.r
+Output list of sequences that don’t have a > 97% identity match using get_otus_not_in_hmp.r.
 
-output HMP reference genomes that do have a >97% identity match using get_hmp_in_otus.r
+Note: I have decided that I will actually skip this step and just bring in all the HMP genomes later along with all the matching genomes I find through BLAST.
 
-## Find matches in the NCBI complete and draft bacterial genomes for the OTUs that don’t match to the HMP data set
+## Find matches in the NCBI complete and draft bacterial genomes for OTUs
 
 I ran into a bug using the NCBI webtool, and had to search once through the wgs database, and once with Complete Genomes to get both the draft and the complete genomes.
 
 Blast against draft and complete bacterial genomes with NCBI: http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch&BLAST_SPEC=MicrobialGenomes
 
-I put my BLAST output (Downloaded in CSV format) in data/complete-genomes-Alignment-HitTable.csv and wgs-Alignment-HitTable.csv and data/wgs-Alignment-HitTable.csv and wgs-Alignment-HitTable.csv.
+I put my BLAST output (Downloaded in CSV format) in data/complete-genomes-Alignment-HitTable.csv and data/wgs-Alignment-HitTable.csv.
 
 ## Retrieve the genome for the matches
 
@@ -63,4 +63,8 @@ The download genomes are compressed. To uncompress, navigate to the folder in te
 gunzip *.gz
 ```
 
-The end result is that all the genomes I need for my functional mapping library are in data/genomes/ and the HMP reference genomes.
+The end result is that all the genomes I need for my functional mapping library are in data/genomes/. For each genome, I've downloaded a feature table and a .fna file, so that the coding sequences can be extracted in the next step
+
+## Extract coding sequences from genomes
+
+extract_orfs.py

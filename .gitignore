@@ -1,3 +1,5 @@
 .DS_Store
 collect_reference_genomes/data/genomes/
 collect_reference_genomes/data/nash_data/
+collect_reference_genomes/output/complete-genomes-Alignment-HitTable.csv
+collect_reference_genomes/output/wgs-Alignment-HitTable.csv
