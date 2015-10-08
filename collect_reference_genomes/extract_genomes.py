@@ -10,6 +10,7 @@
 import urllib2
 import re
 import random
+import os
 from bs4 import BeautifulSoup
 import ftplib
 from ftplib import FTP
